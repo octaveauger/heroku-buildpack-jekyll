@@ -104,6 +104,7 @@ WARNING
         create_database_yml
         install_binaries
         run_assets_precompile_rake_task
+        update_contentful_content
         generate_jekyll_site
       end
       best_practice_warnings
@@ -121,6 +122,15 @@ private
 
     variables.reduce("") do |env, (key, value)|
       "#{env} #{key}=#{value}"
+    end
+  end
+
+  # update content coming from Contentful
+  def update_contentful_content
+    puts "Refreshing Contentful data"
+    pipe("bundle exec jekyll contentful --trace 2>&1")
+    unless $? == 0
+      error "Failed to update content from Contenful."
     end
   end
 
